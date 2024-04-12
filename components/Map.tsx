@@ -7,7 +7,7 @@ import Leaflet from "leaflet";
 export default function Map() {
 
     const icon: Leaflet.DivIcon = new Leaflet.DivIcon({
-      html: `<img src="./red-cross-logo-5.png"/>`,
+      html: `<img src="./red-cross-logo-7.png"/>`,
       className: "w-[10px]"
     });
 
@@ -22,7 +22,7 @@ export default function Map() {
             <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            maxZoom={19} // Maximum zoom level supported by OpenStreetMap
+            maxZoom={15} // Maximum zoom level supported by OpenStreetMap
             minZoom={0} // Minimum zoom level supported by OpenStreetMap
             errorTileUrl="https://www.example.com/error-tile.png" // URL of an error tile to display if tile loading fails
             noWrap={true} // Prevents the map from wrapping around the world horizontally
@@ -35,11 +35,12 @@ export default function Map() {
                 icon={icon}
               >
                 <Popup className="w-fit h-fit">
-                  <div className='flex flex-col '>
+                  <div className='flex flex-col gap-2'>
                     <span className="text-base font-extrabold">{item.school}</span>
-                    <br/>
-                    <span className='text-sm'>Phone: {item.phone}</span>
-                    <span className='text-sm'>Email: {item.email}</span>
+                    <div className='flex flex-col '>
+                      <span className='text-sm'>Phone: {item.phone}</span>
+                      <span className='text-sm'>Email: {item.email}</span>
+                    </div>
                   </div>
                 </Popup>
               </Marker>
