@@ -6,7 +6,7 @@ import Leaflet from "leaflet";
 export default function Map() {
 
     const icon: Leaflet.DivIcon = new Leaflet.DivIcon({
-      html: `<img style="width: 24px; height: 24px;" src="./red-cross-logo-10.png"/>`,
+      html: `<img style="width: 24px; height: 24px;" src="./red-cross-logo-12.png"/>`,
       className:'clear'
     });
 
