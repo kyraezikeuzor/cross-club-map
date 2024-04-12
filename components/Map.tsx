@@ -1,8 +1,7 @@
 'use client'
 import {MapContainer,TileLayer,Marker,Popup,} from "react-leaflet";
-import {clubs} from '@/data/clubs'
+import {CLUBS} from '@/data/clubs'
 import { Icon, DivIcon, point } from "leaflet";
-import marker from "./tgcr-logo.png";
 import Leaflet from "leaflet";
 
 export default function Map() {
@@ -18,7 +17,7 @@ export default function Map() {
           <MapContainer 
           center={[29.76790572283977, -95.36153769473093]} 
           zoom={10}
-          style={{ height: "1000px", width: "100%" }}>
+          style={{ height: "100%", width: "100%" }}>
             
             <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -29,14 +28,19 @@ export default function Map() {
             noWrap={true} // Prevents the map from wrapping around the world horizontally
             />
 
-            {clubs.map((item:any,index:number)=>(
+            {CLUBS.map((item:any,index:number)=>(
                 <Marker
                 key={index}
                 position={item.geocode}
                 icon={icon}
               >
                 <Popup className="w-fit h-fit">
-                  <span className="text-base font-extrabold">{item.school}</span>
+                  <div className='flex flex-col '>
+                    <span className="text-base font-extrabold">{item.school}</span>
+                    <br/>
+                    <span className='text-sm'>Phone: {item.phone}</span>
+                    <span className='text-sm'>Email: {item.email}</span>
+                  </div>
                 </Popup>
               </Marker>
             ))}
