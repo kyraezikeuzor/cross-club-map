@@ -1,14 +1,13 @@
 'use client'
 import {MapContainer,TileLayer,Marker,Popup,} from "react-leaflet";
 import {CLUBS} from '@/data/clubs'
-import { Icon, DivIcon, point } from "leaflet";
 import Leaflet from "leaflet";
 
 export default function Map() {
 
     const icon: Leaflet.DivIcon = new Leaflet.DivIcon({
-      html: `<img src="./red-cross-logo-7.png"/>`,
-      className: "w-[10px]"
+      html: `<img style="width: 24px; height: 24px;" src="./red-cross-logo-10.png"/>`,
+      className:'clear'
     });
 
     return (
@@ -17,7 +16,8 @@ export default function Map() {
           <MapContainer 
           center={[29.76790572283977, -95.36153769473093]} 
           zoom={10}
-          style={{ height: "100%", width: "100%" }}>
+          style={{ height: "100%", width: "100%" }}
+          >
             
             <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -47,7 +47,6 @@ export default function Map() {
             ))}
 
           </MapContainer>
-
       </main>
     )
 }
