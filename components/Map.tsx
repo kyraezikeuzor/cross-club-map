@@ -9,11 +9,11 @@ export default function Map() {
 
     const icon: Leaflet.DivIcon = new Leaflet.DivIcon({
       html: `<img src="./red-cross-logo-3.png"/>`,
-      className: ""
+      className: "w-[10px]"
     });
 
     return (
-        <main className="d w-[100%] h-[100vh] z-50">
+        <main className="d w-[100%] h-[100vh] z-40">
 
           <MapContainer 
           center={[29.76790572283977, -95.36153769473093]} 
@@ -36,13 +36,13 @@ export default function Map() {
                 icon={icon}
               >
                 <Popup className="w-fit h-fit">
-                  <p className="text-base font-medium">{item.school}</p>
+                  <span className="text-base font-extrabold">{item.school}</span>
                 </Popup>
               </Marker>
             ))}
 
           </MapContainer>
-        
+
       </main>
     )
 }
