@@ -1,52 +1,122 @@
 'use client'
-import {MapContainer,TileLayer,Marker,Popup,} from "react-leaflet";
-import {CLUBS} from '@/data/clubs'
+import React, { useState, useEffect } from 'react'
+import { LocationDto } from '@/types'
+
 import Leaflet from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
+import "leaflet-defaulticon-compatibility";
+
+import { 
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMapEvents,
+  useMap
+} from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
+
+import { locations } from '@/data/locations'
+import { osm } from '@/data/providers'
+import {
+  LocationTab,
+  LocationCard,
+  PopupContent,
+} from './Location'
+
+import {
+  Dashboard,
+  DashboardNavbar,
+  DashboardSidebar,
+  DashboardSidebarContent
+} from './Dashboard'
+
 
 export default function Map() {
 
-    const icon: Leaflet.DivIcon = new Leaflet.DivIcon({
-      html: `<img style="width: 24px; height: 24px;" src="./red-cross-logo-12.png"/>`,
-      className:'clear'
-    });
+    const [selectedLocation, setSelectedLocation] = useState<LocationDto | null>(null)
+
+    const LocationMarker = ({}) => {
+      const map = useMap();
+      const icon: Leaflet.DivIcon = new Leaflet.DivIcon({
+        html: `<img style="width: 24px; height: 24px;" src="./red-cross-logo-12.png"/>`,
+        className:'clear'
+      });
+
+      const flyToMarker = (coordinates: [number, number], zoom: number) => {
+        if (coordinates && typeof coordinates[0] !== "undefined") {
+          map.flyTo(coordinates, zoom, {
+            animate: true,
+            duration: 1.5,
+          });
+        }
+      };
+  
+      //10. useEffect to trigger the map fly when markerData changes.
+      useEffect(() => {
+        if (selectedLocation) {
+          if (selectedLocation.geocode && typeof selectedLocation.geocode[0] !== "undefined") {
+            flyToMarker(selectedLocation.geocode, 11);
+          }
+        }
+      }, [selectedLocation]);
+    }
 
     return (
-        <main className="d w-[100%] h-[100vh] z-40">
+        <Dashboard>
+          <DashboardNavbar/>
+
+          <DashboardSidebar>
+              <DashboardSidebarContent>
+                <span className='font-semibold text-lg'>Search Club Locations</span>
+                {locations && locations.map((item:any,index:number)=>(
+                  <LocationTab
+                    key={index}
+                    onSelect={()=>{setSelectedLocation(item)}} 
+                    onDeselect={()=>{setSelectedLocation(null)}}
+                    location={item}
+                    selectedLocation={selectedLocation}
+                  />       
+                ))} 
+              </DashboardSidebarContent>
+          </DashboardSidebar>
 
           <MapContainer 
-          center={[29.76790572283977, -95.36153769473093]} 
-          zoom={10}
-          style={{ height: "100%", width: "100%" }}
+            center={[29.76790572283977, -95.36153769473093]} 
+            zoom={10}
+            style={{ height: "100vh", width: "100%" }}
           >
-            
             <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            maxZoom={15} // Maximum zoom level supported by OpenStreetMap
-            minZoom={0} // Minimum zoom level supported by OpenStreetMap
-            errorTileUrl="https://www.example.com/error-tile.png" // URL of an error tile to display if tile loading fails
-            noWrap={true} // Prevents the map from wrapping around the world horizontally
+              attribution={osm.maptiler.attribution}
+              url={osm.maptiler.url}
+              maxZoom={15} // Maximum zoom level supported by OpenStreetMap
+              minZoom={0} // Minimum zoom level supported by OpenStreetMap
+              errorTileUrl="https://www.example.com/error-tile.png" // URL of an error tile to display if tile loading fails
+              noWrap={true} // Prevents the map from wrapping around the world horizontally
             />
-
-            {CLUBS.map((item:any,index:number)=>(
-                <Marker
-                key={index}
-                position={item.geocode}
-                icon={icon}
-              >
-                <Popup className="w-fit h-fit">
-                  <div className='flex flex-col gap-2'>
-                    <span className="text-base font-extrabold">{item.school}</span>
-                    <div className='flex flex-col '>
-                      <span className='text-sm'>Phone: {item.phone}</span>
-                      <span className='text-sm'>Email: {item.email}</span>
-                    </div>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-
+                {locations && locations.map((item:any,index:number)=>(
+                  <Marker 
+                    position={item.geocode} 
+                    eventHandlers={{
+                      click: () => {setSelectedLocation(item)},
+                    }}
+                  >
+                    <Popup>
+                      <PopupContent location={item}/>
+                    </Popup>
+                  </Marker>
+                ))}
+                
           </MapContainer>
-      </main>
+
+          {selectedLocation != null && 
+            <LocationCard location={selectedLocation}/>
+          }
+      </Dashboard>
     )
+}
+
+const LocationMarker = ({}) => {
+  
 }
