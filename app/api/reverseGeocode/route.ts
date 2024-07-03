@@ -29,5 +29,3 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to reverse geocode' }, { status: 500 });
   }
 }
-
-export default GET;
