@@ -142,72 +142,53 @@ export const MapPositionImage = (
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-
     useEffect(() => {
         const fetchPhotoUrl = async () => {
-          try {
-            setLoading(true);
-
-            const geocodeFetchUrl = `/api/geocode?address=${address}`
-            const geocodeFetchResponse = await axios.get(geocodeFetchUrl)
-            const latitude = geocodeFetchResponse.data.lat
-            const longitude = geocodeFetchResponse.data.lng
-
-            const placeSearchUrl = `/api/nearbySearch?types=school&geocode=${latitude},${longitude}`
-            const placeSearchResponse = await axios.get(placeSearchUrl) 
-
-            // placeSearchResponse.data.results[0].photos will never return an empty array, photos will just not exist
-            if (placeSearchResponse.data.results[0].photos) {
-                const place = placeSearchResponse.data.results[0];
-                const photos = place.photos;
-
-                console.log('IT IS A SCHOOL')
-      
-                if (photos && photos.length > 0) {
-                  const photoReference = photos[0].photo_reference;
-                  const photoFetchUrl = `/api/placePhoto?photo_reference=${photoReference}`
-                  const photoResponse = await axios.get(photoFetchUrl);
-                  const { imageBuffer, mimeType } = photoResponse.data;
-                  
-                  // Create a base64 image URL
-                  const base64ImageUrl = `data:${mimeType};base64,${imageBuffer}`;
-                  setPhotoUrl(base64ImageUrl);
-  
+            try {
+                setLoading(true);
+            
+                const geocodeFetchUrl = `/api/geocode?address=${address}`;
+                const geocodeFetchResponse = await axios.get(geocodeFetchUrl);
+                const latitude = geocodeFetchResponse.data.lat;
+                const longitude = geocodeFetchResponse.data.lng;
+            
+                const placeSearchUrl = `/api/nearbySearch?types=school&geocode=${latitude},${longitude}`;
+                let placeSearchResponse = await axios.get(placeSearchUrl);
+            
+                let place = placeSearchResponse.data.results && placeSearchResponse.data.results[0];
+                let photos = place && place.photos;
+            
+                if (!place || !photos) {
+                    const placeSearchUrlBackup = `/api/nearbySearch?types=locality,political&geocode=${latitude},${longitude}`;
+                    placeSearchResponse = await axios.get(placeSearchUrlBackup);
+            
+                    place = placeSearchResponse.data.results && placeSearchResponse.data.results[0];
+                    photos = place && place.photos;
+            
+                    console.log('IT IS NOT A SCHOOL');
                 } else {
-                  setError('No photos available for this location.');
+                    console.log('IT IS A SCHOOL');
                 }
-            } else if (placeSearchResponse.data.results[0].photos == undefined) {
-                const placeSearchUrlBackup = `/api/nearbySearch?types=locality,political&geocode=${latitude},${longitude}`
-                const placeSearchResponseBackup = await axios.get(placeSearchUrlBackup)
-
-                console.log('IT IS not a SCHOOL')
-
-                const place = placeSearchResponseBackup.data.results[0];
-                const photos = place.photos;
-      
+            
                 if (photos && photos.length > 0) {
-                  const photoReference = photos[0].photo_reference;
-                  const photoFetchUrl = `/api/placePhoto?photo_reference=${photoReference}`
-                  const photoResponse = await axios.get(photoFetchUrl);
-                  const { imageBuffer, mimeType } = photoResponse.data;
-                  
-                  // Create a base64 image URL
-                  const base64ImageUrl = `data:${mimeType};base64,${imageBuffer}`;
-                  setPhotoUrl(base64ImageUrl);
-  
+                    const photoReference = photos[0].photo_reference;
+                    const photoFetchUrl = `/api/placePhoto?photo_reference=${photoReference}`;
+                    const photoResponse = await axios.get(photoFetchUrl);
+                    const { imageBuffer, mimeType } = photoResponse.data;
+            
+                    // Create a base64 image URL
+                    const base64ImageUrl = `data:${mimeType};base64,${imageBuffer}`;
+                    setPhotoUrl(base64ImageUrl);
                 } else {
-                  setError('No photos available for this location.');
+                    setError('No photos available for this location.');
                 }
-
+            } catch (err:any) {
+                console.error('Error fetching photo:', err, err.message);
+                setError('No photos available for this location.');
+            } finally {
+                setLoading(false);
             }
-
-          } catch (err: any) {
-            console.error('Error fetching photo:', err, err.message);
-            setError(`No photos available for this locaton.`);
-          } finally {
-            setLoading(false);
-          }
-        };
+        } 
     
         fetchPhotoUrl();
       }, [address]);
@@ -217,7 +198,7 @@ export const MapPositionImage = (
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div>{error}</div>;
     }
   
     return (
