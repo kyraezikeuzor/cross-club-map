@@ -5,7 +5,6 @@ type LocationDto = {
     county:string;
     address:string;
     level: "College" | "High School" | "Middle School"
-    geocode: LatLngTuple;
     phone: string;
     email:string;
     sponsor: {
@@ -14,3 +13,8 @@ type LocationDto = {
         "email":string
     },
 }
+
+// Extend LocationDto to include geocode
+interface GeocodedLocationDto extends LocationDto {
+    geocode: [number, number];
+  }

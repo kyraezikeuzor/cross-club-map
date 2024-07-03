@@ -147,10 +147,14 @@ export const MapPositionImage = (
             try {
                 setLoading(true);
             
+                /*
                 const geocodeFetchUrl = `/api/geocode?address=${address}`;
                 const geocodeFetchResponse = await axios.get(geocodeFetchUrl);
                 const latitude = geocodeFetchResponse.data.lat;
-                const longitude = geocodeFetchResponse.data.lng;
+                const longitude = geocodeFetchResponse.data.lng;*/
+
+                const geocode = await getGeocode(address)
+                const [latitude,longitude] = geocode
             
                 const placeSearchUrl = `/api/nearbySearch?types=school&geocode=${latitude},${longitude}`;
                 let placeSearchResponse = await axios.get(placeSearchUrl);

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { LocationDto } from '@/types'
+import { LocationDto, GeocodedLocationDto } from '@/types'
 
 import Leaflet from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -50,33 +50,53 @@ import {
   CommandShortcut,
 } from "@/components/ui/Command"
 
+import { getGeocode } from '@/lib/utils'
+
 export default function Map() {
 
     const [selectedLocation, setSelectedLocation] = useState<LocationDto | null>(null)
+    const [geocodedLocations, setGeocodedLocations] = useState<GeocodedLocationDto[]>([]);
 
-    const LocationMarker = () => {
+    useEffect(() => {
+      const fetchGeocodes = async () => {
+        const geocodedData = await Promise.all(
+          locations.map(async (item) => {
+            const geocode = await getGeocode(item.address);
+            return { ...item, geocode };
+          })
+        );
+        setGeocodedLocations(geocodedData);
+      };
+  
+      fetchGeocodes();
+    }, [locations]);
+
+    const LocationMarker = ({selectedLocation}:{selectedLocation:LocationDto | null}) => {
       const map = useMap();
 
-      const flyToMarker = (coordinates: [number, number], zoom: number) => {
-        if (coordinates && typeof coordinates[0] !== "undefined") {
+      const flyToMarker = (coordinates:[number,number], zoom:number) => {
+        if (coordinates && typeof coordinates[0] !== 'undefined') {
           map.flyTo(coordinates, zoom, {
             animate: true,
-            duration: .5,
+            duration: 0.5,
           });
         }
       };
-  
-      // useEffect to trigger the map fly when selectedLocation changes.
+    
       useEffect(() => {
-        if (selectedLocation) {
-          if (selectedLocation.geocode && typeof selectedLocation.geocode[0] !== "undefined") {
-            flyToMarker(selectedLocation.geocode, 11);
-          }
+        const flyToMarkerGeocode = async () => {
+          if (selectedLocation) {
+            const selectedGeocode = await getGeocode(selectedLocation.address)
+            if (selectedGeocode && typeof selectedGeocode[0] !== 'undefined') {
+              flyToMarker(selectedGeocode,11)
+            }
+          }  
         }
+        flyToMarkerGeocode()
       }, [selectedLocation, map]);
-
+    
       return null;
-    }
+    };
 
 
     return (
@@ -152,20 +172,22 @@ export default function Map() {
               errorTileUrl="https://www.example.com/error-tile.png" // URL of an error tile to display if tile loading fails
               noWrap={true} // Prevents the map from wrapping around the world horizontally
             />
-                {locations && locations.map((item:any,index:number)=>(
-                  <Marker 
+              {geocodedLocations.map((item, index) => (
+                <Marker
                   key={index}
-                    position={item.geocode} 
-                    eventHandlers={{
-                      click: () => {setSelectedLocation(item)},
-                    }}
-                  >
-                    <Popup>
-                      <MarkerPopupContent location={item}/>
-                    </Popup>
-                  </Marker>
-                ))}
-            <LocationMarker />
+                  position={item.geocode}
+                  eventHandlers={{
+                    click: () => {
+                      setSelectedLocation(item);
+                    },
+                  }}
+                >
+                  <Popup>
+                    <MarkerPopupContent location={item} />
+                  </Popup>
+                </Marker>
+              ))}
+            <LocationMarker selectedLocation={selectedLocation} />
           </MapContainer>
         </DashboardContent>
 
