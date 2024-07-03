@@ -2,32 +2,8 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
-/*
-export async function GET(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
-    const placeId = searchParams.get('place_id');
 
-    if (!placeId) {
-        return NextResponse.json({ error: 'location is required' }, { status: 400 });
-    }
-
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-    const fields = ['formatted_address','name', 'photos','photo','reference'];
-    const url = `https://maps.googleapis.com/maps/api/place/details/json?fields=${fields.join(',')}&place_id=${placeId}&key=${apiKey}`;
-
-    try {
-        const response = await axios.get(url);
-        console.log('Google API call success:', response.data);
-        return NextResponse.json(response.data);
-    } catch (error: any) {
-        console.error('Error fetching place details:', error.response ? error.response.data : error.message);
-        return NextResponse.json({ error: 'Failed to fetch place details', details: error.response ? error.response.data : error.message }, { status: 500 });
-    }
-}
-
-export default GET;
-*/
-export async function GET(request: NextRequest) {
+export async function handler(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const location = searchParams.get('location');
 
@@ -49,7 +25,7 @@ export async function GET(request: NextRequest) {
     }
 }
 
-export default GET;
+export default handler;
 
 
 /*
