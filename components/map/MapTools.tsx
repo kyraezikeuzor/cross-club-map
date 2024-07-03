@@ -144,7 +144,6 @@ export const MapPositionImage = (
 
 
     useEffect(() => {
-
         const fetchPhotoUrl = async () => {
           try {
             setLoading(true);
