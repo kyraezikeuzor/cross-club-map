@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+import Navbar from '@/components/ui/Navbar'
+
 const inter = Inter({ subsets: ["latin"] });
 
 
@@ -29,12 +31,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Live Clubs — American Red Cross</title>
+        <title>TGCR Toolkit</title>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
         crossOrigin=""/>
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Navbar/>
+        <main>
+          {children}
+        </main>
+      </body>
     </html>
   );
 }

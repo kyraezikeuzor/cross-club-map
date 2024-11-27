@@ -21,7 +21,7 @@ export const Select = (
                 //console.log(`Selected ${selectedLocation?.school}`)
             } else if (lodash.isEqual(selectedLocation, location) == true) {
                 onDeselect()
-                console.log(`Deselected ${selectedLocation.school}`)
+                console.log(`Deselected ${selectedLocation.name}`)
             }
         }
         handleSelect()

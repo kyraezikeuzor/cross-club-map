@@ -21,16 +21,16 @@ export const MarkerPopupContent = (
     return (
         <div className='w-full h-full'>
             <div className='flex flex-col gap-1'>
-                <span className="text-sm font-semibold">{location.school}</span>
+                <span className="text-sm font-semibold">{location.name}</span>
                 <div className='flex flex-col '>
-                    <span className='text-sm'>Location: {location.phone}</span>
+                    <span className='text-sm flex flex-row gap-1'>{location.address}</span>
                 </div>
             </div>
         </div>
     )
 }
 
-export const MapPositionCard = (
+export const NodeCard = (
     {location, selectedLocation, onSelect, onDeselect}:
     {location: LocationDto, selectedLocation: LocationDto | null, onSelect: any, onDeselect?: any}
 ) => {
@@ -49,7 +49,7 @@ export const MapPositionCard = (
                 </div>
                 <div className='flex flex-col space-y-1' >
                     <span className='flex flex-row gap-1 items-center text-base font-medium'>
-                        {location.school}
+                        {location.name}
                     </span>
                     <span 
                         className={
@@ -62,7 +62,7 @@ export const MapPositionCard = (
                         {location.level}
                     </span>
                     <span className='text-xs'>
-                        {location.county}
+                        {location.address}
                     </span>
                 </div>
             </div>
@@ -70,26 +70,23 @@ export const MapPositionCard = (
     )
 }
 
-export const MapPositionPopupCard = (
+export const NodePopupCard = (
     {location, onClickOut}:
     {location: LocationDto, onClickOut?: any}
 ) => {
 
 
     return (
-        <div className='w-1/2 lg:w-1/4 ease-in-out bg-white py-2 absolute z-[99999] top-20 right-20 rounded-xl shadow-2xl border border-gray-200'>
+        <div className='w-1/2 lg:w-1/4 ease-in-out backdrop-blur bg-[--clr-base] py-2 absolute z-[99999] top-20 right-20 rounded-xl shadow-2xl border border-gray-200'>
+            
             <div className='relative flex flex-col space-y-2 '>
                 <span onClick={()=>onClickOut()} className='absolute top-1 right-2 bg-gray-100 w-8 h-8 rounded-full p-2 flex flex-col items-center cursor-pointer'>
                     <X className='text-gray-600'/>
                 </span>
-                
-                <span className='px-3'>Details</span>
-                
-                <hr className='w-full h-1'/>
 
                 <div className='flex flex-row flex-wrap space-x-2 items-center px-3'>
                     <span className='text-lg font-semibold'>
-                        {location.school}
+                        {location.name}
                     </span>
                     <span
                         className={
@@ -103,7 +100,7 @@ export const MapPositionPopupCard = (
                     </span>
                 </div>
                 <div className='px-3'>
-                    <MapPositionImage
+                    <NodeImage
                     address={location.address}
                     />
                 </div>
@@ -118,7 +115,7 @@ export const MapPositionPopupCard = (
                     <hr className='h-16 w-[2px] bg-gray-200'/>
                     <div className='w-1/2 flex flex-col gap-1 px-3'>
                         <span className='text-gray-500 text-sm'>Location</span>
-                        <span className='font-semibold text-base leading-5'>Golden Gate Bridge, San Francisco</span>
+                        <span className='font-semibold text-base leading-5'>{location.address}</span>
                     </div>
                 </div>
                 <hr className='w-full h-1'/>
@@ -135,7 +132,7 @@ export const MapPositionPopupCard = (
     )
 }
 
-export const MapPositionImage = (
+export const NodeImage = (
     {address}:{address:string}
 ) => {
     const [photoUrl, setPhotoUrl] = useState<string | null>(null);
@@ -146,12 +143,6 @@ export const MapPositionImage = (
         const fetchPhotoUrl = async () => {
             try {
                 setLoading(true);
-            
-                /*
-                const geocodeFetchUrl = `/api/geocode?address=${address}`;
-                const geocodeFetchResponse = await axios.get(geocodeFetchUrl);
-                const latitude = geocodeFetchResponse.data.lat;
-                const longitude = geocodeFetchResponse.data.lng;*/
 
                 const geocode = await getGeocode(address)
                 const [latitude,longitude] = geocode

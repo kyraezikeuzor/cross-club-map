@@ -4,7 +4,8 @@ import { LocationDto } from '@/types'
 
 export const locations: LocationDto[] = [
     {
-        "school": "St. Agnes Academy",
+        "name": "St. Agnes Academy",
+        "category":"Red Cross Club",
         "county": "Harris County",
         "address":"9000 Bellaire Blvd, Houston, TX 77036, USA",
         "level": "High School",
@@ -17,7 +18,8 @@ export const locations: LocationDto[] = [
         },
     },
     {
-        "school":"Seven Lakes High School",
+        "name":"Seven Lakes High School",
+        "category":"Red Cross Club",
         "county":"Harris County",
         "address":"9251 S Fry Rd, Katy, TX 77494",
         "level": "High School",
@@ -30,7 +32,8 @@ export const locations: LocationDto[] = [
         }
     },
     {
-        "school":"Houston Baptist University",
+        "name":"Houston Baptist University",
+        "category":"Red Cross Club",
         "county":"Harris County",
         "address":"9000 Bellaire Blvd, Houston, TX 77036",
         "level": "College",
@@ -43,7 +46,8 @@ export const locations: LocationDto[] = [
         }
     },
     {
-        "school":"Thomas Jefferson High School",
+        "name":"Thomas Jefferson High School",
+        "category":"Red Cross Club",
         "county":"Virginia County",
         "address":"6560 Braddock Rd, Alexandria, VA 22312",
         "level":"High School",
@@ -56,7 +60,8 @@ export const locations: LocationDto[] = [
         }
     },
     {
-        "school":"The White House",
+        "name":"The White House",
+        "category":"Red Cross Club",
         "county":"Virginia County",
         "address":"1600 Pennsylvania Avenue NW, Washington, DC 20500",
         "level":"High School",
@@ -69,7 +74,8 @@ export const locations: LocationDto[] = [
         }
     },
     {
-        "school":"Disney Land Park",
+        "name":"Disney Land Park",
+        "category":"Red Cross Club",
         "county":"Virginia County",
         "address":"Anaheim, CA 92802",
         "level":"High School",

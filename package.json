@@ -11,7 +11,9 @@
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.4.0",
     "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-scroll-area": "^1.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
     "@types/googlemaps": "^3.43.3",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
@@ -22,6 +24,7 @@
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
     "lodash": "^4.17.21",
+    "lucide": "^0.433.0",
     "lucide-react": "^0.399.0",
     "next": "14.1.4",
     "node": "^18.20.2",
